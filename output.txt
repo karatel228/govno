@@ -1,0 +1,275 @@
+GRAMMAR
+<program>::=<function><program> | <function>
+
+Production <program> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<program>::=<function><program'>
+<program'>::=empty | <program>
+<function>::=<type><name> ( <arguments> ) { <body> }
+<type>::=int  | float  | double  | char  | bool 
+<arguments>::=<argument> , <arguments> | <argument> | empty
+
+Production <arguments> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<arguments>::=empty | <argument><arguments'>
+<arguments'>::=empty | , <arguments>
+<argument>::=<type><name> | <type><name> [ <integer> ]
+
+Production <argument> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<argument>::=<type><name><argument'>
+<argument'>::=[ <integer> ] | empty
+<body>::=<structure><body> | <structure>
+
+Production <body> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<body>::=<structure><body'>
+<body'>::=empty | <body>
+<structure>::=<declaration/initialization> | <if,else> | <equality> | <for> | <while> | <do,while> | <printf> | return <name_or_const> ;
+<declaration/initialization>::=<type><names> ; | <type><equality> ;
+
+Production <declaration/initialization> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<declaration/initialization>::=<type><declaration/initialization'>
+<declaration/initialization'>::=<equality> ; | <names> ;
+<names>::=<name> , <names> | <name>
+
+Production <names> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<names>::=<name><names'>
+<names'>::=empty | , <names>
+<equality>::=<name> = <expression> ; | <name> = ' <letter> ' ; | <name> = <true_or_false> ; | <name> [ <integer> ] = { <massive_args> } ; | <name> [ <integer> ] = " <words> " ;
+
+Production <equality> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<equality>::=<name><equality'''>
+<equality'>::=' <letter> ' ; | <true_or_false> ; | <expression> ;
+<equality''>::=" <words> " ; | { <massive_args> } ;
+<equality'''>::=[ <integer> ] = <equality''> | = <equality'>
+<expression>::=<term><next_expr>
+<next_expr>::=<operation><expression> | empty
+<term>::=<const_or_name> | ( <expression> )
+<operation>::=+ | - | * | / | ^
+<true_or_false>::=true | false
+<massive_args>::=<const_or_name> , <massive_args> | <const_or_name>
+
+Production <massive_args> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<massive_args>::=<const_or_name><massive_args'>
+<massive_args'>::=empty | , <massive_args>
+<words>::=<word><punctuation_mark><words> | <word>
+
+Production <words> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<words>::=<word><words'>
+<words'>::=empty | <punctuation_mark><words>
+<punctuation_mark>::=, | . | - |   | ( | ) | ; | :
+<if,else>::=if ( <conditions> ) { <body> } | if ( <conditions> ) { <body> } else { <body> }
+
+Production <if,else> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<if,else>::=if(<conditions>){<body>}<if,else'>
+<if,else'>::=else { <body> } | empty
+<conditions>::=<condition><logical_oper><conditions> | <condition>
+
+Production <conditions> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<conditions>::=<condition><conditions'>
+<conditions'>::=empty | <logical_oper><conditions>
+<condition>::=<const_or_name><compare_oper><const_or_name>
+<compare_oper>::=< | > | == | != | <= | >=
+<logical_oper>::=&& | ||
+<for>::=for ( int <name> = <const_or_name> ; <name><compare_oper><const_or_name> ; <name><incr_or_decr> ) { <body> }
+<incr_or_decr>::=-- | ++
+<while>::=while ( <conditions> ) { <body> }
+<do,while>::=do { <body> } while ( <conditions> ) ;
+<printf>::=printf ( " <words> " , <names> ) ;
+<const_or_name>::=<const> | <name>
+<name>::=<word><integer> | <word>
+
+Production <name> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<name>::=<word><name'>
+<name'>::=empty | <integer>
+<word>::=<letter><word> | <letter>
+
+Production <word> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<word>::=<letter><word'>
+<word'>::=empty | <word>
+<const>::=<integer> | <integer> . <integer>
+
+Production <const> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<const>::=<integer><const'>
+<const'>::=. <integer> | empty
+<integer>::=<digit><integer> | <digit>
+
+Production <integer> does not fulfill I grammatical rule. Applying left-factoring and rewriting production:
+
+<integer>::=<digit><integer'>
+<integer'>::=empty | <integer>
+<letter>::=a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z
+<digit>::=1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0
+==============================================================================================================================
+FIRSTS
+(<digit>, [])(1, [1])(2, [2])(3, [3])(4, [4])(5, [5])(6, [6])(7, [7])(8, [8])(9, [9])(0, [0])
+==============================================================================================================================
+(<letter>, [])(a, [a])(b, [b])(c, [c])(d, [d])(e, [e])(f, [f])(g, [g])(h, [h])(i, [i])(j, [j])(k, [k])(l, [l])(m, [m])(n, [n])(o, [o])(p, [p])(q, [q])(r, [r])(s, [s])(t, [t])(u, [u])(v, [v])(w, [w])(x, [x])(y, [y])(z, [z])
+==============================================================================================================================
+(<integer'>, [])(empty, [empty])(1, [<integer>])(2, [<integer>])(3, [<integer>])(4, [<integer>])(5, [<integer>])(6, [<integer>])(7, [<integer>])(8, [<integer>])(9, [<integer>])(0, [<integer>])
+==============================================================================================================================
+(<integer>, [])(1, [<digit><integer'>])(2, [<digit><integer'>])(3, [<digit><integer'>])(4, [<digit><integer'>])(5, [<digit><integer'>])(6, [<digit><integer'>])(7, [<digit><integer'>])(8, [<digit><integer'>])(9, [<digit><integer'>])(0, [<digit><integer'>])
+==============================================================================================================================
+(<const'>, [])(., [.<integer>])(empty, [empty])
+==============================================================================================================================
+(<const>, [])(1, [<integer><const'>])(2, [<integer><const'>])(3, [<integer><const'>])(4, [<integer><const'>])(5, [<integer><const'>])(6, [<integer><const'>])(7, [<integer><const'>])(8, [<integer><const'>])(9, [<integer><const'>])(0, [<integer><const'>])
+==============================================================================================================================
+(<word'>, [])(empty, [empty])(a, [<word>])(b, [<word>])(c, [<word>])(d, [<word>])(e, [<word>])(f, [<word>])(g, [<word>])(h, [<word>])(i, [<word>])(j, [<word>])(k, [<word>])(l, [<word>])(m, [<word>])(n, [<word>])(o, [<word>])(p, [<word>])(q, [<word>])(r, [<word>])(s, [<word>])(t, [<word>])(u, [<word>])(v, [<word>])(w, [<word>])(x, [<word>])(y, [<word>])(z, [<word>])
+==============================================================================================================================
+(<word>, [])(a, [<letter><word'>])(b, [<letter><word'>])(c, [<letter><word'>])(d, [<letter><word'>])(e, [<letter><word'>])(f, [<letter><word'>])(g, [<letter><word'>])(h, [<letter><word'>])(i, [<letter><word'>])(j, [<letter><word'>])(k, [<letter><word'>])(l, [<letter><word'>])(m, [<letter><word'>])(n, [<letter><word'>])(o, [<letter><word'>])(p, [<letter><word'>])(q, [<letter><word'>])(r, [<letter><word'>])(s, [<letter><word'>])(t, [<letter><word'>])(u, [<letter><word'>])(v, [<letter><word'>])(w, [<letter><word'>])(x, [<letter><word'>])(y, [<letter><word'>])(z, [<letter><word'>])
+==============================================================================================================================
+(<name'>, [])(empty, [empty])(1, [<integer>])(2, [<integer>])(3, [<integer>])(4, [<integer>])(5, [<integer>])(6, [<integer>])(7, [<integer>])(8, [<integer>])(9, [<integer>])(0, [<integer>])
+==============================================================================================================================
+(<name>, [])(a, [<word><name'>])(b, [<word><name'>])(c, [<word><name'>])(d, [<word><name'>])(e, [<word><name'>])(f, [<word><name'>])(g, [<word><name'>])(h, [<word><name'>])(i, [<word><name'>])(j, [<word><name'>])(k, [<word><name'>])(l, [<word><name'>])(m, [<word><name'>])(n, [<word><name'>])(o, [<word><name'>])(p, [<word><name'>])(q, [<word><name'>])(r, [<word><name'>])(s, [<word><name'>])(t, [<word><name'>])(u, [<word><name'>])(v, [<word><name'>])(w, [<word><name'>])(x, [<word><name'>])(y, [<word><name'>])(z, [<word><name'>])
+==============================================================================================================================
+(<const_or_name>, [])(1, [<const>])(2, [<const>])(3, [<const>])(4, [<const>])(5, [<const>])(6, [<const>])(7, [<const>])(8, [<const>])(9, [<const>])(0, [<const>])(a, [<name>])(b, [<name>])(c, [<name>])(d, [<name>])(e, [<name>])(f, [<name>])(g, [<name>])(h, [<name>])(i, [<name>])(j, [<name>])(k, [<name>])(l, [<name>])(m, [<name>])(n, [<name>])(o, [<name>])(p, [<name>])(q, [<name>])(r, [<name>])(s, [<name>])(t, [<name>])(u, [<name>])(v, [<name>])(w, [<name>])(x, [<name>])(y, [<name>])(z, [<name>])
+==============================================================================================================================
+(<printf>, [])(printf, [printf("<words>",<names>);])
+==============================================================================================================================
+(<do,while>, [])(do, [do{<body>}while(<conditions>);])
+==============================================================================================================================
+(<while>, [])(while, [while(<conditions>){<body>}])
+==============================================================================================================================
+(<incr_or_decr>, [])(--, [--])(++, [++])
+==============================================================================================================================
+(<for>, [])(for, [for(int<name>=<const_or_name>;<name><compare_oper><const_or_name>;<name><incr_or_decr>){<body>}])
+==============================================================================================================================
+(<logical_oper>, [])(&&, [&&])(||, [||])
+==============================================================================================================================
+(<compare_oper>, [])(<, [<])(>, [>])(==, [==])(!=, [!=])(<=, [<=])(>=, [>=])
+==============================================================================================================================
+(<condition>, [])(1, [<const_or_name><compare_oper><const_or_name>])(2, [<const_or_name><compare_oper><const_or_name>])(3, [<const_or_name><compare_oper><const_or_name>])(4, [<const_or_name><compare_oper><const_or_name>])(5, [<const_or_name><compare_oper><const_or_name>])(6, [<const_or_name><compare_oper><const_or_name>])(7, [<const_or_name><compare_oper><const_or_name>])(8, [<const_or_name><compare_oper><const_or_name>])(9, [<const_or_name><compare_oper><const_or_name>])(0, [<const_or_name><compare_oper><const_or_name>])(a, [<const_or_name><compare_oper><const_or_name>])(b, [<const_or_name><compare_oper><const_or_name>])(c, [<const_or_name><compare_oper><const_or_name>])(d, [<const_or_name><compare_oper><const_or_name>])(e, [<const_or_name><compare_oper><const_or_name>])(f, [<const_or_name><compare_oper><const_or_name>])(g, [<const_or_name><compare_oper><const_or_name>])(h, [<const_or_name><compare_oper><const_or_name>])(i, [<const_or_name><compare_oper><const_or_name>])(j, [<const_or_name><compare_oper><const_or_name>])(k, [<const_or_name><compare_oper><const_or_name>])(l, [<const_or_name><compare_oper><const_or_name>])(m, [<const_or_name><compare_oper><const_or_name>])(n, [<const_or_name><compare_oper><const_or_name>])(o, [<const_or_name><compare_oper><const_or_name>])(p, [<const_or_name><compare_oper><const_or_name>])(q, [<const_or_name><compare_oper><const_or_name>])(r, [<const_or_name><compare_oper><const_or_name>])(s, [<const_or_name><compare_oper><const_or_name>])(t, [<const_or_name><compare_oper><const_or_name>])(u, [<const_or_name><compare_oper><const_or_name>])(v, [<const_or_name><compare_oper><const_or_name>])(w, [<const_or_name><compare_oper><const_or_name>])(x, [<const_or_name><compare_oper><const_or_name>])(y, [<const_or_name><compare_oper><const_or_name>])(z, [<const_or_name><compare_oper><const_or_name>])
+==============================================================================================================================
+(<conditions'>, [])(empty, [empty])(&&, [<logical_oper><conditions>])(||, [<logical_oper><conditions>])
+==============================================================================================================================
+(<conditions>, [])(1, [<condition><conditions'>])(2, [<condition><conditions'>])(3, [<condition><conditions'>])(4, [<condition><conditions'>])(5, [<condition><conditions'>])(6, [<condition><conditions'>])(7, [<condition><conditions'>])(8, [<condition><conditions'>])(9, [<condition><conditions'>])(0, [<condition><conditions'>])(a, [<condition><conditions'>])(b, [<condition><conditions'>])(c, [<condition><conditions'>])(d, [<condition><conditions'>])(e, [<condition><conditions'>])(f, [<condition><conditions'>])(g, [<condition><conditions'>])(h, [<condition><conditions'>])(i, [<condition><conditions'>])(j, [<condition><conditions'>])(k, [<condition><conditions'>])(l, [<condition><conditions'>])(m, [<condition><conditions'>])(n, [<condition><conditions'>])(o, [<condition><conditions'>])(p, [<condition><conditions'>])(q, [<condition><conditions'>])(r, [<condition><conditions'>])(s, [<condition><conditions'>])(t, [<condition><conditions'>])(u, [<condition><conditions'>])(v, [<condition><conditions'>])(w, [<condition><conditions'>])(x, [<condition><conditions'>])(y, [<condition><conditions'>])(z, [<condition><conditions'>])
+==============================================================================================================================
+(<if,else'>, [])(else, [else{<body>}])(empty, [empty])
+==============================================================================================================================
+(<if,else>, [])(if, [if(<conditions>){<body>}<if,else'>])
+==============================================================================================================================
+(<punctuation_mark>, [])(,, [,])(., [.])(-, [-])( , [ ])((, [(])(), [)])(;, [;])(:, [:])
+==============================================================================================================================
+(<words'>, [])(empty, [empty])(,, [<punctuation_mark><words>])(., [<punctuation_mark><words>])(-, [<punctuation_mark><words>])( , [<punctuation_mark><words>])((, [<punctuation_mark><words>])(), [<punctuation_mark><words>])(;, [<punctuation_mark><words>])(:, [<punctuation_mark><words>])
+==============================================================================================================================
+(<words>, [])(a, [<word><words'>])(b, [<word><words'>])(c, [<word><words'>])(d, [<word><words'>])(e, [<word><words'>])(f, [<word><words'>])(g, [<word><words'>])(h, [<word><words'>])(i, [<word><words'>])(j, [<word><words'>])(k, [<word><words'>])(l, [<word><words'>])(m, [<word><words'>])(n, [<word><words'>])(o, [<word><words'>])(p, [<word><words'>])(q, [<word><words'>])(r, [<word><words'>])(s, [<word><words'>])(t, [<word><words'>])(u, [<word><words'>])(v, [<word><words'>])(w, [<word><words'>])(x, [<word><words'>])(y, [<word><words'>])(z, [<word><words'>])
+==============================================================================================================================
+(<massive_args'>, [])(empty, [empty])(,, [,<massive_args>])
+==============================================================================================================================
+(<massive_args>, [])(1, [<const_or_name><massive_args'>])(2, [<const_or_name><massive_args'>])(3, [<const_or_name><massive_args'>])(4, [<const_or_name><massive_args'>])(5, [<const_or_name><massive_args'>])(6, [<const_or_name><massive_args'>])(7, [<const_or_name><massive_args'>])(8, [<const_or_name><massive_args'>])(9, [<const_or_name><massive_args'>])(0, [<const_or_name><massive_args'>])(a, [<const_or_name><massive_args'>])(b, [<const_or_name><massive_args'>])(c, [<const_or_name><massive_args'>])(d, [<const_or_name><massive_args'>])(e, [<const_or_name><massive_args'>])(f, [<const_or_name><massive_args'>])(g, [<const_or_name><massive_args'>])(h, [<const_or_name><massive_args'>])(i, [<const_or_name><massive_args'>])(j, [<const_or_name><massive_args'>])(k, [<const_or_name><massive_args'>])(l, [<const_or_name><massive_args'>])(m, [<const_or_name><massive_args'>])(n, [<const_or_name><massive_args'>])(o, [<const_or_name><massive_args'>])(p, [<const_or_name><massive_args'>])(q, [<const_or_name><massive_args'>])(r, [<const_or_name><massive_args'>])(s, [<const_or_name><massive_args'>])(t, [<const_or_name><massive_args'>])(u, [<const_or_name><massive_args'>])(v, [<const_or_name><massive_args'>])(w, [<const_or_name><massive_args'>])(x, [<const_or_name><massive_args'>])(y, [<const_or_name><massive_args'>])(z, [<const_or_name><massive_args'>])
+==============================================================================================================================
+(<true_or_false>, [])(true, [true])(false, [false])
+==============================================================================================================================
+(<operation>, [])(+, [+])(-, [-])(*, [*])(/, [/])(^, [^])
+==============================================================================================================================
+(<term>, [])((, [(<expression>)])(1, [<const_or_name>])(2, [<const_or_name>])(3, [<const_or_name>])(4, [<const_or_name>])(5, [<const_or_name>])(6, [<const_or_name>])(7, [<const_or_name>])(8, [<const_or_name>])(9, [<const_or_name>])(0, [<const_or_name>])(a, [<const_or_name>])(b, [<const_or_name>])(c, [<const_or_name>])(d, [<const_or_name>])(e, [<const_or_name>])(f, [<const_or_name>])(g, [<const_or_name>])(h, [<const_or_name>])(i, [<const_or_name>])(j, [<const_or_name>])(k, [<const_or_name>])(l, [<const_or_name>])(m, [<const_or_name>])(n, [<const_or_name>])(o, [<const_or_name>])(p, [<const_or_name>])(q, [<const_or_name>])(r, [<const_or_name>])(s, [<const_or_name>])(t, [<const_or_name>])(u, [<const_or_name>])(v, [<const_or_name>])(w, [<const_or_name>])(x, [<const_or_name>])(y, [<const_or_name>])(z, [<const_or_name>])
+==============================================================================================================================
+(<next_expr>, [])(+, [<operation><expression>])(-, [<operation><expression>])(*, [<operation><expression>])(/, [<operation><expression>])(^, [<operation><expression>])(empty, [empty])
+==============================================================================================================================
+(<expression>, [])((, [<term><next_expr>])(1, [<term><next_expr>])(2, [<term><next_expr>])(3, [<term><next_expr>])(4, [<term><next_expr>])(5, [<term><next_expr>])(6, [<term><next_expr>])(7, [<term><next_expr>])(8, [<term><next_expr>])(9, [<term><next_expr>])(0, [<term><next_expr>])(a, [<term><next_expr>])(b, [<term><next_expr>])(c, [<term><next_expr>])(d, [<term><next_expr>])(e, [<term><next_expr>])(f, [<term><next_expr>])(g, [<term><next_expr>])(h, [<term><next_expr>])(i, [<term><next_expr>])(j, [<term><next_expr>])(k, [<term><next_expr>])(l, [<term><next_expr>])(m, [<term><next_expr>])(n, [<term><next_expr>])(o, [<term><next_expr>])(p, [<term><next_expr>])(q, [<term><next_expr>])(r, [<term><next_expr>])(s, [<term><next_expr>])(t, [<term><next_expr>])(u, [<term><next_expr>])(v, [<term><next_expr>])(w, [<term><next_expr>])(x, [<term><next_expr>])(y, [<term><next_expr>])(z, [<term><next_expr>])
+==============================================================================================================================
+(<equality'''>, [])([, [[<integer>]=<equality''>])(=, [=<equality'>])
+==============================================================================================================================
+(<equality''>, [])(", ["<words>";])({, [{<massive_args>};])
+==============================================================================================================================
+(<equality'>, [])(', ['<letter>';])(true, [<true_or_false>;])(false, [<true_or_false>;])((, [<expression>;])(1, [<expression>;])(2, [<expression>;])(3, [<expression>;])(4, [<expression>;])(5, [<expression>;])(6, [<expression>;])(7, [<expression>;])(8, [<expression>;])(9, [<expression>;])(0, [<expression>;])(a, [<expression>;])(b, [<expression>;])(c, [<expression>;])(d, [<expression>;])(e, [<expression>;])(f, [<expression>;])(g, [<expression>;])(h, [<expression>;])(i, [<expression>;])(j, [<expression>;])(k, [<expression>;])(l, [<expression>;])(m, [<expression>;])(n, [<expression>;])(o, [<expression>;])(p, [<expression>;])(q, [<expression>;])(r, [<expression>;])(s, [<expression>;])(t, [<expression>;])(u, [<expression>;])(v, [<expression>;])(w, [<expression>;])(x, [<expression>;])(y, [<expression>;])(z, [<expression>;])
+==============================================================================================================================
+(<equality>, [])(a, [<name><equality'''>])(b, [<name><equality'''>])(c, [<name><equality'''>])(d, [<name><equality'''>])(e, [<name><equality'''>])(f, [<name><equality'''>])(g, [<name><equality'''>])(h, [<name><equality'''>])(i, [<name><equality'''>])(j, [<name><equality'''>])(k, [<name><equality'''>])(l, [<name><equality'''>])(m, [<name><equality'''>])(n, [<name><equality'''>])(o, [<name><equality'''>])(p, [<name><equality'''>])(q, [<name><equality'''>])(r, [<name><equality'''>])(s, [<name><equality'''>])(t, [<name><equality'''>])(u, [<name><equality'''>])(v, [<name><equality'''>])(w, [<name><equality'''>])(x, [<name><equality'''>])(y, [<name><equality'''>])(z, [<name><equality'''>])
+==============================================================================================================================
+(<names'>, [])(empty, [empty])(,, [,<names>])
+==============================================================================================================================
+(<names>, [])(a, [<name><names'>])(b, [<name><names'>])(c, [<name><names'>])(d, [<name><names'>])(e, [<name><names'>])(f, [<name><names'>])(g, [<name><names'>])(h, [<name><names'>])(i, [<name><names'>])(j, [<name><names'>])(k, [<name><names'>])(l, [<name><names'>])(m, [<name><names'>])(n, [<name><names'>])(o, [<name><names'>])(p, [<name><names'>])(q, [<name><names'>])(r, [<name><names'>])(s, [<name><names'>])(t, [<name><names'>])(u, [<name><names'>])(v, [<name><names'>])(w, [<name><names'>])(x, [<name><names'>])(y, [<name><names'>])(z, [<name><names'>])
+==============================================================================================================================
+(<declaration/initialization'>, [])(a, [<equality>;])(b, [<equality>;])(c, [<equality>;])(d, [<equality>;])(e, [<equality>;])(f, [<equality>;])(g, [<equality>;])(h, [<equality>;])(i, [<equality>;])(j, [<equality>;])(k, [<equality>;])(l, [<equality>;])(m, [<equality>;])(n, [<equality>;])(o, [<equality>;])(p, [<equality>;])(q, [<equality>;])(r, [<equality>;])(s, [<equality>;])(t, [<equality>;])(u, [<equality>;])(v, [<equality>;])(w, [<equality>;])(x, [<equality>;])(y, [<equality>;])(z, [<equality>;])
+==============================================================================================================================
+(<declaration/initialization>, [])(int , [<type><declaration/initialization'>])(float , [<type><declaration/initialization'>])(double , [<type><declaration/initialization'>])(char , [<type><declaration/initialization'>])(bool , [<type><declaration/initialization'>])
+==============================================================================================================================
+(<structure>, [])(return, [return<name_or_const>;])(int , [<declaration/initialization>])(float , [<declaration/initialization>])(double , [<declaration/initialization>])(char , [<declaration/initialization>])(bool , [<declaration/initialization>])(if, [<if,else>])(a, [<equality>])(b, [<equality>])(c, [<equality>])(d, [<equality>])(e, [<equality>])(f, [<equality>])(g, [<equality>])(h, [<equality>])(i, [<equality>])(j, [<equality>])(k, [<equality>])(l, [<equality>])(m, [<equality>])(n, [<equality>])(o, [<equality>])(p, [<equality>])(q, [<equality>])(r, [<equality>])(s, [<equality>])(t, [<equality>])(u, [<equality>])(v, [<equality>])(w, [<equality>])(x, [<equality>])(y, [<equality>])(z, [<equality>])(for, [<for>])(while, [<while>])(do, [<do,while>])(printf, [<printf>])
+==============================================================================================================================
+(<body'>, [])(empty, [empty])(return, [<body>])(int , [<body>])(float , [<body>])(double , [<body>])(char , [<body>])(bool , [<body>])(if, [<body>])(a, [<body>])(b, [<body>])(c, [<body>])(d, [<body>])(e, [<body>])(f, [<body>])(g, [<body>])(h, [<body>])(i, [<body>])(j, [<body>])(k, [<body>])(l, [<body>])(m, [<body>])(n, [<body>])(o, [<body>])(p, [<body>])(q, [<body>])(r, [<body>])(s, [<body>])(t, [<body>])(u, [<body>])(v, [<body>])(w, [<body>])(x, [<body>])(y, [<body>])(z, [<body>])(for, [<body>])(while, [<body>])(do, [<body>])(printf, [<body>])
+==============================================================================================================================
+(<body>, [])(return, [<structure><body'>])(int , [<structure><body'>])(float , [<structure><body'>])(double , [<structure><body'>])(char , [<structure><body'>])(bool , [<structure><body'>])(if, [<structure><body'>])(a, [<structure><body'>])(b, [<structure><body'>])(c, [<structure><body'>])(d, [<structure><body'>])(e, [<structure><body'>])(f, [<structure><body'>])(g, [<structure><body'>])(h, [<structure><body'>])(i, [<structure><body'>])(j, [<structure><body'>])(k, [<structure><body'>])(l, [<structure><body'>])(m, [<structure><body'>])(n, [<structure><body'>])(o, [<structure><body'>])(p, [<structure><body'>])(q, [<structure><body'>])(r, [<structure><body'>])(s, [<structure><body'>])(t, [<structure><body'>])(u, [<structure><body'>])(v, [<structure><body'>])(w, [<structure><body'>])(x, [<structure><body'>])(y, [<structure><body'>])(z, [<structure><body'>])(for, [<structure><body'>])(while, [<structure><body'>])(do, [<structure><body'>])(printf, [<structure><body'>])
+==============================================================================================================================
+(<argument'>, [])([, [[<integer>]])(empty, [empty])
+==============================================================================================================================
+(<argument>, [])(int , [<type><name><argument'>])(float , [<type><name><argument'>])(double , [<type><name><argument'>])(char , [<type><name><argument'>])(bool , [<type><name><argument'>])
+==============================================================================================================================
+(<arguments'>, [])(empty, [empty])(,, [,<arguments>])
+==============================================================================================================================
+(<arguments>, [])(empty, [empty])(int , [<argument><arguments'>])(float , [<argument><arguments'>])(double , [<argument><arguments'>])(char , [<argument><arguments'>])(bool , [<argument><arguments'>])
+==============================================================================================================================
+(<type>, [])(int , [int ])(float , [float ])(double , [double ])(char , [char ])(bool , [bool ])
+==============================================================================================================================
+(<function>, [])(int , [<type><name>(<arguments>){<body>}])(float , [<type><name>(<arguments>){<body>}])(double , [<type><name>(<arguments>){<body>}])(char , [<type><name>(<arguments>){<body>}])(bool , [<type><name>(<arguments>){<body>}])
+==============================================================================================================================
+(<program'>, [])(empty, [empty])(int , [<program>])(float , [<program>])(double , [<program>])(char , [<program>])(bool , [<program>])
+==============================================================================================================================
+(<program>, [])(int , [<function><program'>])(float , [<function><program'>])(double , [<function><program'>])(char , [<function><program'>])(bool , [<function><program'>])
+==============================================================================================================================
+==============================================================================================================================
+FOLLOWS
+(<program>,)($,)
+(<function>,)(int ,)(float ,)(double ,)(char ,)(bool ,)($,)
+(<program'>,)($,)
+(<type>,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)
+(<name>,)((,)(=,)(;,)([,)(,,)(),)(<,)(>,)(==,)(!=,)(<=,)(>=,)(--,)(++,)(},)(+,)(-,)(*,)(/,)(^,)(&&,)(||,)
+(<arguments>,)(),)
+(<body>,)(},)
+(<argument>,)(,,)(),)
+(<arguments'>,)(),)
+(<argument'>,)(,,)(),)
+(<integer>,)(],)((,)(=,)(;,)(.,)([,)(,,)(),)(<,)(>,)(==,)(!=,)(<=,)(>=,)(--,)(++,)(},)(+,)(-,)(*,)(/,)(^,)(&&,)(||,)
+(<structure>,)(return,)(int ,)(float ,)(double ,)(char ,)(bool ,)(if,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)(for,)(while,)(do,)(printf,)(},)
+(<body'>,)(},)
+(<declaration/initialization>,)(return,)(int ,)(float ,)(double ,)(char ,)(bool ,)(if,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)(for,)(while,)(do,)(printf,)(},)
+(<if,else>,)(return,)(int ,)(float ,)(double ,)(char ,)(bool ,)(if,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)(for,)(while,)(do,)(printf,)(},)
+(<equality>,)(;,)(return,)(int ,)(float ,)(double ,)(char ,)(bool ,)(if,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)(for,)(while,)(do,)(printf,)(},)
+(<for>,)(return,)(int ,)(float ,)(double ,)(char ,)(bool ,)(if,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)(for,)(while,)(do,)(printf,)(},)
+(<while>,)(return,)(int ,)(float ,)(double ,)(char ,)(bool ,)(if,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)(for,)(while,)(do,)(printf,)(},)
+(<do,while>,)(return,)(int ,)(float ,)(double ,)(char ,)(bool ,)(if,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)(for,)(while,)(do,)(printf,)(},)
+(<printf>,)(return,)(int ,)(float ,)(double ,)(char ,)(bool ,)(if,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)(for,)(while,)(do,)(printf,)(},)
+(<name_or_const>,)(;,)
+(<declaration/initialization'>,)(return,)(int ,)(float ,)(double ,)(char ,)(bool ,)(if,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)(for,)(while,)(do,)(printf,)(},)
+(<names>,)(;,)(),)
+(<names'>,)(;,)(),)
+(<equality'''>,)(;,)(return,)(int ,)(float ,)(double ,)(char ,)(bool ,)(if,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)(for,)(while,)(do,)(printf,)(},)
+(<letter>,)(',)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)(,,)(.,)(-,)( ,)((,)(),)(;,)(:,)(",)(1,)(2,)(3,)(4,)(5,)(6,)(7,)(8,)(9,)(0,)(=,)([,)(<,)(>,)(==,)(!=,)(<=,)(>=,)(--,)(++,)(},)(+,)(*,)(/,)(^,)(&&,)(||,)
+(<true_or_false>,)(;,)
+(<expression>,)(;,)(),)
+(<words>,)(",)
+(<massive_args>,)(},)
+(<equality''>,)(;,)(return,)(int ,)(float ,)(double ,)(char ,)(bool ,)(if,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)(for,)(while,)(do,)(printf,)(},)
+(<equality'>,)(;,)(return,)(int ,)(float ,)(double ,)(char ,)(bool ,)(if,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)(for,)(while,)(do,)(printf,)(},)
+(<term>,)(+,)(-,)(*,)(/,)(^,)(;,)(),)
+(<next_expr>,)(;,)(),)
+(<operation>,)((,)(1,)(2,)(3,)(4,)(5,)(6,)(7,)(8,)(9,)(0,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)
+(<const_or_name>,)(;,)(,,)(},)(<,)(>,)(==,)(!=,)(<=,)(>=,)(+,)(-,)(*,)(/,)(^,)(),)(&&,)(||,)
+(<massive_args'>,)(},)
+(<word>,)(,,)(.,)(-,)( ,)((,)(),)(;,)(:,)(",)(1,)(2,)(3,)(4,)(5,)(6,)(7,)(8,)(9,)(0,)(=,)([,)(<,)(>,)(==,)(!=,)(<=,)(>=,)(--,)(++,)(},)(+,)(*,)(/,)(^,)(&&,)(||,)
+(<words'>,)(",)
+(<punctuation_mark>,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)
+(<conditions>,)(),)
+(<if,else'>,)(return,)(int ,)(float ,)(double ,)(char ,)(bool ,)(if,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)(for,)(while,)(do,)(printf,)(},)
+(<condition>,)(&&,)(||,)(),)
+(<conditions'>,)(),)
+(<logical_oper>,)(1,)(2,)(3,)(4,)(5,)(6,)(7,)(8,)(9,)(0,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)
+(<compare_oper>,)(1,)(2,)(3,)(4,)(5,)(6,)(7,)(8,)(9,)(0,)(a,)(b,)(c,)(d,)(e,)(f,)(g,)(h,)(i,)(j,)(k,)(l,)(m,)(n,)(o,)(p,)(q,)(r,)(s,)(t,)(u,)(v,)(w,)(x,)(y,)(z,)
+(<incr_or_decr>,)(),)
+(<const>,)(;,)(,,)(},)(<,)(>,)(==,)(!=,)(<=,)(>=,)(+,)(-,)(*,)(/,)(^,)(),)(&&,)(||,)
+(<name'>,)((,)(=,)(;,)([,)(,,)(),)(<,)(>,)(==,)(!=,)(<=,)(>=,)(--,)(++,)(},)(+,)(-,)(*,)(/,)(^,)(&&,)(||,)
+(<word'>,)(,,)(.,)(-,)( ,)((,)(),)(;,)(:,)(",)(1,)(2,)(3,)(4,)(5,)(6,)(7,)(8,)(9,)(0,)(=,)([,)(<,)(>,)(==,)(!=,)(<=,)(>=,)(--,)(++,)(},)(+,)(*,)(/,)(^,)(&&,)(||,)
+(<const'>,)(;,)(,,)(},)(<,)(>,)(==,)(!=,)(<=,)(>=,)(+,)(-,)(*,)(/,)(^,)(),)(&&,)(||,)
+(<digit>,)(1,)(2,)(3,)(4,)(5,)(6,)(7,)(8,)(9,)(0,)(],)((,)(=,)(;,)(.,)(,,)(},)(<,)(>,)(==,)(!=,)(<=,)(>=,)(+,)(-,)(*,)(/,)(^,)(),)(&&,)(||,)([,)(--,)(++,)
+(<integer'>,)(],)((,)(=,)(;,)(.,)(,,)(},)(<,)(>,)(==,)(!=,)(<=,)(>=,)(+,)(-,)(*,)(/,)(^,)(),)(&&,)(||,)([,)(--,)(++,)
+==============================================================================================================================

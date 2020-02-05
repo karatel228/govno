@@ -1,0 +1,31 @@
+﻿  Source.cpp
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(22): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(51): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(64): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(127): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(128): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(264): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(273): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(282): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(297): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(316): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(331): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(400): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(407): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(445): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(446): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(495): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(498): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(510): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(514): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(524): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(595): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(613): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(614): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(636): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(637): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(676): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(690): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(704): warning C4018: '<': signed/unsigned mismatch
+c:\users\ezvolal\source\repos\levenshtein_distance\levenshtein_distance\source.cpp(777): warning C4018: '<': signed/unsigned mismatch
+  Levenshtein_distance.vcxproj -> C:\Users\ezvolal\source\repos\Levenshtein_distance\Debug\Levenshtein_distance.exe
