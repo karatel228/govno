@@ -4,8 +4,8 @@
 <arguments>::=<argument> , <arguments> | <argument> | empty
 <argument>::=<type><name> | <type><name> [ <integer> ]
 <body>::=<structure><body> | <structure>
-<structure>::=<declaration/initialization> | <if,else> | <equality> | <for> | <while> | <do,while> | <printf> | return <name_or_const> ;
-<declaration/initialization>::=<type><names> ; | <type><equality> ;
+<structure>::=<initialization> | <if,else> | <equality> | <for> | <while> | <do,while> | <printf> | return  <const_or_name> ;
+<initialization>::=<type><equality>
 <names>::=<name> , <names> | <name>
 <equality>::=<name> = <expression> ; | <name> = ' <letter> ' ; | <name> = <true_or_false> ; | <name> [ <integer> ] = { <massive_args> } ; | <name> [ <integer> ] = " <words> " ;
 <expression>::=<term><next_expr>
@@ -26,8 +26,8 @@
 <while>::=while ( <conditions> ) { <body> }
 <do,while>::=do { <body> } while ( <conditions> ) ;
 <printf>::=printf ( " <words> " , <names> ) ;
-<const_or_name>::=<const> | <name>
 ====
+<const_or_name>::=<const> | <name>
 <name>::=<word><integer> | <word>
 <word>::=<letter><word> | <letter>
 <const>::=<integer> | <integer> . <integer>
