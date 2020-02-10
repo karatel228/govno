@@ -27,6 +27,7 @@
 <do,while>::=do { <body> } while ( <conditions> ) ;
 <printf>::=printf ( " <words> " , <names> ) ;
 <const_or_name>::=<const> | <name>
+====
 <name>::=<word><integer> | <word>
 <word>::=<letter><word> | <letter>
 <const>::=<integer> | <integer> . <integer>

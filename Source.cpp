@@ -358,20 +358,20 @@ vector<vector<pair<string, vector<string>>>> firsts(vector<vector<vector<string>
 		}
 	}
 
-	//for (auto& kek : first) {
-	//	for (auto& elem : kek) {
-	//		if (elem == kek.front()) {
-	//			cout << elem.first;
-	//			cout << "       ";
-	//		}
-	//		else {
-	//			cout << elem.first;
-	//			cout << ";";
-	//		}
+	for (auto& kek : first) {
+		for (auto& elem : kek) {
+			if (elem == kek.front()) {
+				cout << elem.first;
+				cout << "       ";
+			}
+			else {
+				cout << elem.first;
+				cout << ";";
+			}
 
-	//	}
-	//	cout << endl;
-	//}
+		}
+		cout << endl;
+	}
 
 
 	//cout << "==============================================================================================================================" << endl;;
@@ -404,25 +404,30 @@ vector<vector<pair<string, vector<string>>>> firsts(vector<vector<vector<string>
 				bool empty_flag = false;
 				do {
 					ind = find_vector(first, vect[i].first);
-					for (int j = 1; j < first[ind].size(); j++) {
-						if (first[ind][j].first == "empty")
-							empty_flag = true;
-						if (find(vect, first[ind][j].first) == -1)
-							vect.push_back(pair<string, vector<string>>(first[ind][j].first, vect[i].second));
-					}
-					if (empty_flag) {
-						for (auto &elem : vect[i].second) {
-							if (elem == vect[i].first)
-								vect[i].first == elem;
+					if (ind != -1) {
+						for (int j = 1; j < first[ind].size(); j++) {
+							if (first[ind][j].first == "empty")
+								empty_flag = true;
+							if (find(vect, first[ind][j].first) == -1)
+								vect.push_back(pair<string, vector<string>>(first[ind][j].first, vect[i].second));
 						}
-						pos++;
+
+						if (empty_flag) {
+							for (auto& elem : vect[i].second) {
+								if (elem == vect[i].first)
+									vect[i].first == elem;
+							}
+							pos++;
+						}
+						else {
+							vect.erase(vect.begin() + i);
+							i--;
+							break;
+						}
 					}
 					else {
-						vect.erase(vect.begin() + i);
-						i--;
 						break;
 					}
-
 
 				} while (pos != vect.size());
 			}
@@ -495,12 +500,14 @@ vector<vector<pair<string, string>>> follows(vector<vector<vector<string>>>& gra
 		for (int i = 1; i < vect.size(); i++) {
 			if (vect[i].second == "follow") {
 				ind = find_vector(follow, vect[i].first);
-				for (int j = 1; j < follow[ind].size(); j++) {
-					if (find(vect, follow[ind][j].first) == -1)
-						vect.push_back(follow[ind][j]);
-				}
-				vect.erase(vect.begin() + i);
-				i--;
+				if (ind != -1) {
+					for (int j = 1; j < follow[ind].size(); j++) {
+						if (find(vect, follow[ind][j].first) == -1)
+							vect.push_back(follow[ind][j]);
+					}
+					vect.erase(vect.begin() + i);
+					i--;
+				}	
 			}
 		}
 	}
@@ -573,12 +580,6 @@ int main() {
 		{
 			while (getline(myfile, line))
 			{
-				if (line.front() != '<') {
-					cout << "File does not contain a grammar description. Try again: ";
-					grammar.clear();
-					break;
-				}
-
 				grammar.push_back(line);
 			}
 			myfile.close();
@@ -588,11 +589,19 @@ int main() {
 	}
 
 	vector<vector<vector<string>>> gramm;
+	vector<vector<vector<string>>> add_gramm;
 	vector<string> tokens;
 	ofstream fout("output.txt");
 	if (fout.is_open()) {
 		fout << "GRAMMAR" << endl;
 		for (int i = 0; i < grammar.size(); i++) {
+
+			if (grammar[i].front() == '=') {
+				gramm.push_back(vector<vector<string>>());
+				gramm.back().push_back(vector<string >());
+				gramm.back().front().push_back(grammar[i]);
+				continue;
+			}
 
 			fout << grammar[i];
 			fout << endl;
@@ -644,17 +653,7 @@ int main() {
 			}
 		}
 
-		/*	for (auto& gram : gramm) {
-				fout << gram[0].front() << "::=";
-				for (int p = 1; p < gram.size(); p++) {
-					for (auto& pipka : gram[p]) {
-						fout << pipka;
-					}
-					if(gram[p]!=gram.back())
-						fout << " | ";
-				}
-				fout << endl;
-			}*/
+			
 
 
 		//vector<vector<vector<string>>> grammar_union;
@@ -667,9 +666,48 @@ int main() {
 
 		//vector<vector<pair<string, string>>> add_follow = follows(add_gramm, add_first);
 
+		for (int i = 0; i < gramm.size(); i++) {
+			if (gramm[i].front().front().front() == '=') {
+				add_gramm.insert(add_gramm.begin(), gramm.begin() + i + 1, gramm.end());
+				gramm.erase(gramm.begin() + i, gramm.end());
+				break;
+			}
+		}
+
+		for (auto& gram : gramm) {
+			fout << gram[0].front() << "::=";
+			for (int p = 1; p < gram.size(); p++) {
+				for (auto& pipka : gram[p]) {
+					fout << pipka;
+				}
+				if (gram[p] != gram.back())
+					fout << " | ";
+			}
+			fout << endl;
+		}
+
+		fout << "==============================================================================================================================" << endl;
+		fout << "AADFDFDFFDFDFFDFFDFFD" << endl;
+
+		for (auto& add_gramm : add_gramm) {
+			fout << add_gramm[0].front() << "::=";
+			for (int p = 1; p < add_gramm.size(); p++) {
+				for (auto& pipka : add_gramm[p]) {
+					fout << pipka;
+				}
+				if (add_gramm[p] != add_gramm.back())
+					fout << " | ";
+			}
+			fout << endl;
+		}
+
 		vector<vector<pair<string, vector<string>>>> first = firsts(gramm);
 
 		vector<vector<pair<string, string>>> follow = follows(gramm, first);
+
+		vector<vector<pair<string, vector<string>>>> add_first = firsts(add_gramm);
+
+		/*vector<vector<pair<string, string>>> add_follow = follows(add_gramm, add_first);*/
 
 		fout << "==============================================================================================================================" << endl;
 		fout << "FIRSTS" << endl;
@@ -679,6 +717,21 @@ int main() {
 				fout << "(" << it.first << ", [";
 				for (auto &elem : it.second) {
 						fout << elem;
+				}
+				fout << "])";
+			}
+			fout << endl;
+			fout << "==============================================================================================================================" << endl;
+		}
+
+		fout << "==============================================================================================================================" << endl;
+		fout << "ADDITIONAL FIRSTS" << endl;
+		for (int i = 0; i < add_first.size(); i++)
+		{
+			for (auto& it : add_first[i]) {
+				fout << "(" << it.first << ", [";
+				for (auto& elem : it.second) {
+					fout << elem;
 				}
 				fout << "])";
 			}
@@ -753,7 +806,9 @@ int main() {
 		}*/
 
 		vector<string> stack;
+		vector<string> stack_buff;
 		vector<string> output;
+		vector<string> output_buff;
 		int ind = 0;
 		int ind_1 = 0;
 
@@ -761,38 +816,86 @@ int main() {
 
 		while (1) {
 			if (stack.back().size() == 1 || stack.back().front() != '<' && stack.back().back() != '>') {
-				if (text_one.find(stack.back()) == 0) {
-					output.push_back(stack.back());
-					text_one.erase(0, stack.back().size());
-					stack.pop_back();
-				}
-				else {
-					fout << "Error. Character " << stack.back() << " is not acceptable. Expression doesn't belong to grammar" << endl;
-					fout.close();
+				if (text_one == "&") {
+					fout << "String accepted";
 					return 0;
 				}
-			}
-			else {
-				ind = find_vector(first, stack.back());
-				for (int i = 1; i < first[ind].size(); i++) {
-					if (text_one.find(first[ind][i].first) == 0) {
+				else {
+					if (text_one.find(stack.back()) == 0) {
+						output.push_back(stack.back());
+						text_one.erase(0, stack.back().size());
 						stack.pop_back();
-						for (int j = first[ind][i].second.size() - 1; j >= 0; j--) {
-							stack.push_back(first[ind][i].second[j]);
-						}
-						break;
 					}
-					if (i == first[ind].size() - 1) {
+					else {
 						fout << "Error. Character " << stack.back() << " is not acceptable. Expression doesn't belong to grammar" << endl;
 						fout.close();
 						return 0;
 					}
+				}	
+			}
+			else {
+				ind = find_vector(first, stack.back());
+				if (ind != -1) {
+					for (int i = 1; i < first[ind].size(); i++) {
+						if (text_one.find(first[ind][i].first) == 0) {
+							stack.pop_back();
+							for (int j = first[ind][i].second.size() - 1; j >= 0; j--) {
+								stack.push_back(first[ind][i].second[j]);
+							}
+							break;
+						}
+						if (i == first[ind].size() - 1) {
+							ind_1 = find(first[ind], "empty");
+							if (ind_1 != -1) {
+
+
+
+							}
+							if()
+							fout << "Error. Character " << stack.back() << " is not acceptable. Expression doesn't belong to grammar" << endl;
+							fout.close();
+							return 0;
+						}
+					}
 				}
+				else {
+					stack_buff.push_back(stack.back());
+					while (1) {
+						if (stack_buff.back().size() == 1 || stack_buff.back().front() != '<' && stack_buff.back().back() != '>') {
+							if (text_one.find(stack_buff.back()) == 0) {
+								output_buff.push_back(stack_buff.back());
+								text_one.erase(0, stack_buff.back().size());
+								stack_buff.pop_back();
+							}
+							else {
+								fout << "Error. Character " << stack_buff.back() << " is not acceptable. Expression doesn't belong to grammar" << endl;
+								fout.close();
+								return 0;
+							}
+						}
+						else {
+							ind = find_vector(first, stack_buff.back());
+							if (ind != -1) {
+								for (int i = 1; i < first[ind].size(); i++) {
+									if (text_one.find(first[ind][i].first) == 0) {
+										stack_buff.pop_back();
+										for (int j = first[ind][i].second.size() - 1; j >= 0; j--) {
+											stack_buff.push_back(first[ind][i].second[j]);
+										}
+										break;
+									}
+									if (i == first[ind].size() - 1) {
+										fout << "Error. Character " << stack_buff.back() << " is not acceptable. Expression doesn't belong to grammar" << endl;
+										fout.close();
+										return 0;
+									}
+								}
+							}
+						}
+					}	
+				}	
 			}
 		}
-
-		for(auto& pipka : )
-	
 
 		return 0;
 	}
