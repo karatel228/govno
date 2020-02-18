@@ -1,0 +1,12 @@
+int func(){
+  int x=5;
+  int y=2;
+  while(y<7){
+    y=y+1;
+}
+  for(int j = 0; j < 4; j++){
+    x = x+2;
+} 
+  int sum = x + y;
+  return sum;
+}

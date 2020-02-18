@@ -627,7 +627,7 @@ vector<vector<string>> print_tree(Node* initial) {
 					} 
 				}
 			}
-			if (current->name.front() != '<') {
+			if (current->name.front() == '<' && current->name.size()==1 || current->name.front() != '<') {
 				int start = line;
 				if (current->parent->children.size() > 1) {
 					start = line + 1;
@@ -897,62 +897,40 @@ int main() {
 
 		path.clear();
 		vector<string> inputs;
-		inputs.push_back("");
-		cout << "Enter  file 1 path: ";
-		while (inputs.back().size() == 0) {
-			cin >> path;
-			myfile.open(path);
-			if (myfile.is_open())
-			{
-				while (getline(myfile, line)) {
-					int pos = 0;
-					while ((pos = line.find(' ')) != std::string::npos || (pos = line.find('\t')) != std::string::npos)
-						line.erase(pos, 1);
-					if ((pos = line.find("//")) != std::string::npos)
-						line.erase(pos, line.size()-pos);
-					inputs.back() +=line;
+		for (int i = 1; i <= 2; i++) {
+			inputs.push_back("");
+			cout << "Enter  file " << i << " path: ";
+			while (inputs.back().size() == 0) {
+				cin >> path;
+				myfile.open(path);
+				if (myfile.is_open())
+				{
+					while (getline(myfile, line)) {
+						int pos = 0;
+						while ((pos = line.find(' ')) != std::string::npos || (pos = line.find('\t')) != std::string::npos)
+							line.erase(pos, 1);
+						if ((pos = line.find("//")) != std::string::npos)
+							line.erase(pos, line.size() - pos);
+						inputs.back() += line;
+					}
+
+					myfile.close();
 				}
 
-				myfile.close();
+				else cout << "File not found. Try again: ";
 			}
-
-			else cout << "File not found. Try again: ";
+			path.clear();
 		}
-		
-		/*inputs.push_back("");
-		cout << "Enter  file 2 path: ";
-		while (inputs.back().size() == 0) {
-			cin >> path;
-			myfile.open(path);
-			if (myfile.is_open())
-			{
-				while (getline(myfile, line)) {
-					int pos = 0;
-					while ((pos = line.find(' ')) != std::string::npos || (pos = line.find('\t')) != std::string::npos)
-						line.erase(pos, 1);
-					if ((pos = line.find("//")) != std::string::npos)
-						line.erase(pos, line.size() - 1 - pos);
-					inputs.back() += line;
-				}
 
-				myfile.close();
-			}
-
-			else cout << "File not found. Try again: ";
-		}*/
-
-		inputs.front() += "$";
-		//inputs.back() += "$";
 		vector<string> stack;
-		vector<string> stack_buff;
 		vector<vector<string>> outputs;
-		vector<string> output_buff;
 		vector<Node*> roots;
 		int ind = 0;
 		int ind_1 = 0;
 
 		stack.push_back("$");
 		for (auto& input : inputs) {
+			input += "$";
 			stack.push_back(gramm[0][0][0]);
 			Node* root = init(gramm[0][0][0]);
 			Node* current = root;
@@ -1000,20 +978,27 @@ int main() {
 								break;
 							}
 							if (i == first[ind].size() - 1) {
-								ind_1 = find(first[ind], "empty");
-								if (ind_1 != -1) {
-									stack.pop_back();
-									Node* new_child = init("empty");
-									new_child->parent = current;
-									new_child->next = 0;
-									current->children.push_back(new_child);
-									while (current->next == 0 && current->parent != 0) {
-										current = current->parent;
+								int ind_2 = find_vector(follow, stack.back());
+								if (find(follow[ind_2], string(1, input.front())) != -1) {
+									ind_1 = find(first[ind], "empty");
+									if (ind_1 != -1) {
+										stack.pop_back();
+										Node* new_child = init("empty");
+										new_child->parent = current;
+										new_child->next = 0;
+										current->children.push_back(new_child);
+										while (current->next == 0 && current->parent != 0) {
+											current = current->parent;
+										}
+										if (current->parent != 0)
+											current = current->next;
 									}
-									if (current->parent != 0)
-										current = current->next;
-									break;
-								}
+									else {
+										fout << "Error. Character " << stack.back() << " is not acceptable. Expression doesn't belong to grammar" << endl;
+										fout.close();
+										return 0;
+									}
+								}								
 								else {
 									for (int j = 1; j < first[ind].size(); j++) {
 										if (first[ind][j].first.size() != 1 && first[ind][j].first.front() == '<') {
@@ -1024,74 +1009,34 @@ int main() {
 												if (!current->children.empty())
 													new_child->next = current->children.front();
 												else
-													new_child->next = 0;
-												current->children.insert(current->children.begin(), new_child);
-												stack.push_back(first[ind][j].second[z]);
-											}
-											current = current->children.front();
-											break;
+												new_child->next = 0;
+											current->children.insert(current->children.begin(), new_child);
+											stack.push_back(first[ind][j].second[z]);
 										}
-										if (j == first[ind].size() - 1) {
-											fout << "Error. Character " << stack.back() << " is not acceptable. Expression doesn't belong to grammar" << endl;
-											fout.close();
-											return 0;
-										}
+										current = current->children.front();
+										break;
+									}
+									if (j == first[ind].size() - 1) {
+										fout << "Error. Character " << stack.back() << " is not acceptable. Expression doesn't belong to grammar" << endl;
+										fout.close();
+										return 0;
 									}
 								}
 							}
 						}
 					}
+					}
 					else {
-						/*stack_buff.push_back(stack.back());
-						while (!stack_buff.empty()) {
-							if (stack_buff.back().size() == 1 || stack_buff.back().front() != '<' && stack_buff.back().back() != '>') {
-								if (input.find(stack_buff.back()) == 0) {
-									output_buff.push_back(stack_buff.back());
-									input.erase(0, stack_buff.back().size());
-									stack_buff.pop_back();
-								}
-								else {
-									fout << "Error. Character " << stack_buff.back() << " is not acceptable. Expression doesn't belong to grammar" << endl;
-									fout.close();
-									return 0;
-								}
-							}
-							else {
-								ind = find_vector(add_first, stack_buff.back());
-								if (ind != -1) {
-									for (int i = 1; i < add_first[ind].size(); i++) {
-										if (input.find(add_first[ind][i].first) == 0) {
-											stack_buff.pop_back();
-											for (int j = add_first[ind][i].second.size() - 1; j >= 0; j--) {
-												stack_buff.push_back(add_first[ind][i].second[j]);
-											}
-											break;
-										}
-										if (i == add_first[ind].size() - 1) {
-											ind_1 = find(add_first[ind], "empty");
-											if (ind_1 != -1) {
-												stack_buff.pop_back();
-												break;
-											}
-											else {
-												fout << "Error. Character " << stack.back() << " is not acceptable. Expression doesn't belong to grammar" << endl;
-												fout.close();
-												return 0;
-											}
-										}
-									}
-								}
-							}
-						}*/
 						ind = find_vector(follow, stack.back());
 						if (ind != -1) {
-							string name = "";
+							string name_buff = current->name;
+							name_buff.erase(0, 1);
+							name_buff.erase(name_buff.size() - 1, 1);
 							while (find(follow[ind], string(1, input.front())) == -1) {
-								name += input.front();
 								input.erase(input.begin());
 							}
 						
-						Node* new_child = init(name);
+						Node* new_child = init(name_buff);
 						new_child->parent = current;
 						new_child->next = 0;
 						current->children.push_back(new_child);
@@ -1100,7 +1045,6 @@ int main() {
 						}
 						if (current->parent != 0)
 							current = current->next;
-						output_buff.clear();
 						stack.pop_back();
 						}
 					}
@@ -1108,58 +1052,83 @@ int main() {
 			}
 		}
 	
+		vector<Node*> roots_ast;
+		for (int i = 0; i <= 1; i++) {
+			Node* root_ast = init(roots[i]->name);
+			roots_ast.push_back(root_ast);
+			Node* current_ast = root_ast;
+			Node *current = roots[i];
 
-		Node* root_ast = init(roots.front()->name);
-		Node* current_ast = root_ast;
-		Node *current = roots.front();
+			while (1) {
+				if (!current->children.empty()) {
+					for (auto& single : current->children) {
+						if (single->children.empty()) {
+							vector<Node*> child_buff;
+							for (int z = current->children.size() - 1; z >= 0; z--) {
+								Node* new_child = init(current->children[z]->name);
+								new_child->parent = current_ast;
+								if (!child_buff.empty())
+									new_child->next = child_buff.front();
+								else
+									new_child->next = 0;
+								child_buff.insert(child_buff.begin(), new_child);
+							}
+							if (current_ast->children.empty())
+								current_ast->children.insert(current_ast->children.begin(), child_buff.begin(), child_buff.end());
+							else {
+								current_ast->children.back()->next = child_buff.front();
+								current_ast->children.insert(current_ast->children.end(), child_buff.begin(), child_buff.end());
+							}
+							current_ast = child_buff.front();
+							break;
 
-		while (1) {
-			if (!current->children.empty()) {
-				for (auto& single : current->children) {
-					if (single->children.empty()) {
-						Node* new_child = init(current->name);
-						new_child->parent = current_ast;
-						new_child->next = 0;
-						current_ast->children.push_back(new_child);
-						if (current->children.size() > 1) {
-							current_ast = new_child;
+
 						}
-						fout << current_ast->name << endl;
-						/*for (int i = 0; i < current->children.size(); i++) {
-							fout << current->children[i]->name << "; ";
-						}*/
-						
-						break;
+
 					}
-					
+					current = current->children.front();
+
 				}
-				current = current->children.front();
-			}
-				/*fout << current->name << endl;*/			
+				/*fout << current->name << endl;*/
 			/*fout << endl;*/
-			else {
-				if (current->next != 0)
-					current = current->next;
 				else {
-					while (current->next == 0 && current->parent!=0)
-						current = current->parent;
-					if (current->parent == 0)
-						break;
-					current = current->next;
+					if (current->next != 0) {
+						current = current->next;
+						current_ast = current_ast->next;
+					}
+					else {
+						current_ast = current_ast->parent;
+						while (current->next == 0 && current->parent != 0) {
+							if (current_ast->parent != 0 && current->parent->name == current_ast->parent->name)
+								if(current_ast->name!= current_ast->parent->name)
+									current_ast = current_ast->parent;
+							current = current->parent;
+						}
+						if (current->parent == 0 || current_ast->parent == 0)
+							break;
+						if (current->name == current_ast->name)
+							current_ast = current_ast->next;
+						current = current->next;
+					}
+
 				}
-					
+
 			}
 
 		}
+		
 
-		fout << "First tree:" << endl;
-		vector<vector<string>> output_tree = print_tree(root_ast);
-		for (auto& line : output_tree) {
-			for (string& production : line) {
-				fout << production;
+		for (int i = 0; i <= 1; i++) {
+			fout << i+1 <<"tree:" << endl;
+			vector<vector<string>> output_tree = print_tree(roots_ast[i]);
+			for (auto& line : output_tree) {
+				for (string& production : line) {
+					fout << production;
+				}
+				fout << endl;
 			}
-			fout << endl;
 		}
+		
 		
 
 		

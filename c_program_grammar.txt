@@ -1,13 +1,13 @@
 <program>::=<function><program> | <function>
 <function>::=<type><name> ( <arguments> ) { <body> }
-<type>::=int  | float  | double  | char  | bool 
+<type>::=int | float | double | char | bool
 <arguments>::=<argument> , <arguments> | <argument> | empty
 <argument>::=<type><name> | <type><name> [ <integer> ]
 <body>::=<structure><body> | <structure>
-<structure>::=<initialization> | <if,else> | <equality> | <for> | <while> | <do,while> | <printf> | return  <const_or_name> ;
-<initialization>::=<type><equality>
+<structure>::=<initialization> | <if,else> | <equality> ; | <for> | <while> | <do,while> | <printf> | return <const_or_name> ;
+<initialization>::=<type><equality> ;
 <names>::=<name> , <names> | <name>
-<equality>::=<name> = <expression> ; | <name> = ' <letter> ' ; | <name> = <true_or_false> ; | <name> [ <integer> ] = { <massive_args> } ; | <name> [ <integer> ] = " <words> " ;
+<equality>::=<name> = <expression> | <name> = ' <letter> ' | <name> = <true_or_false> | <name> [ <integer> ] = { <massive_args> } | <name> [ <integer> ] = " <words> " 
 <expression>::=<term><next_expr>
 <next_expr>::=<operation><expression> | empty
 <term>::=<const_or_name> | ( <expression> )
@@ -26,11 +26,4 @@
 <while>::=while ( <conditions> ) { <body> }
 <do,while>::=do { <body> } while ( <conditions> ) ;
 <printf>::=printf ( " <words> " , <names> ) ;
-====
 <const_or_name>::=<const> | <name>
-<name>::=<word><integer> | <word>
-<word>::=<letter><word> | <letter>
-<const>::=<integer> | <integer> . <integer>
-<integer>::=<digit><integer> | <digit>
-<letter>::=a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z
-<digit>::=1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0
