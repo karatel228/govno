@@ -1,0 +1,8 @@
+int main(){
+int b=1;
+int a=2+b;
+while(a<7){
+a=a+b*1;
+}
+return a;
+}
