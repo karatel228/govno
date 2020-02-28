@@ -1,0 +1,14 @@
+ float sum(float a, float b){
+ float result = a+b;
+ return result;
+ }
+int main(){
+ float elem1 = 0.0; //Comment1
+ float elem2 = 1.0;
+ for(int i =1; i < n; i ++){
+  elem2 = elem2 * i;
+  elem1 = elem1 + i;
+  float result = sum(elem1,elem2);
+  return result;
+ }
+}
