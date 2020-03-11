@@ -17,6 +17,7 @@ struct Node {
 	int label;
 	Node* parent;
 	Node* next;
+	Node* leftmost;
 	vector<Node*> children;
 };
 
@@ -30,6 +31,7 @@ Node* init(string a)
 {
 	struct Node* lst = new Node;
 	lst->label = 0;
+	lst->leftmost = 0;
 	lst->parent = 0;
 	lst->next = 0;
 	lst->name = a;
@@ -65,17 +67,134 @@ vector<string> split(string str, const string& delimiter) {
 
 	return tokens;
 }
-int ZhangSasha(Node* root1, Node* root2) {
-	return 5;
+
+vector<string> traverse(Node* node, vector<string> names) {
+	for (int i = 0; i < node->children.size(); i++) {
+		names = traverse(node->children[i], names);
+	}
+	names.push_back(node->name);
+	return names;
 }
 
-vector<int> keyrots(Node* root) {
-	vector<int> keys;
-	keys.push_back(1);
-	keys.push_back(2);
-
-	return keys;
+int labels(Node* node, int index) {
+	for (int i = 0; i < node->children.size(); i++) {
+		index = labels(node->children[i], index);
+	}
+	index++;
+	node->label = index;
+	return index;
 }
+
+void leftmost(Node* node) {
+	if (node == 0)
+		return;
+	for (int i = 0; i < node->children.size(); i++) {
+		leftmost(node->children[i]);
+	}
+	if (node->children.size() == 0) {
+		node->leftmost = node;
+	}
+	else {
+		node->leftmost = node->children[0]->leftmost;
+	}
+}
+
+vector<int> l(Node* node, vector<int> indexes) {
+	for (int i = 0; i < node->children.size(); i++) {
+		indexes = l(node->children[i], indexes);
+	}
+	indexes.push_back(node->leftmost->label);
+	return indexes;
+}
+
+vector<int> keyroots(vector<int> indexes) {
+	vector<int> key_roots;
+	for (int i = 0; i < indexes.size(); i++) {
+		int flag = 0;
+		for (int j = i + 1; j < indexes.size(); j++) {
+			if (indexes[i] == indexes[j]) {
+				flag = 1;
+			}
+		}
+		if (flag == 0) {
+			key_roots.push_back(i + 1);
+		}
+	}
+
+	return key_roots;
+}
+
+vector<vector<int>> ZhangShasha(Node* root1, Node* root2) {
+
+	labels(root1, 0);
+	labels(root2, 0);
+	leftmost(root1);
+	vector<int> indexes1;
+	indexes1 = l(root1, indexes1);
+	vector<int> indexes2;
+	indexes2 = l(root2, indexes2);
+	vector<int> keyroots1 = keyroots(indexes1);
+	vector<int> keyroots2 = keyroots(indexes2);
+	vector<string> names1;
+	names1 = traverse(root1, names1);
+	vector<string> names2;
+	names2 = traverse(root2, names2);
+
+	vector<vector<int>> TD;
+
+	for (int i1 = 1; i1 < keyroots1.size() + 1; i1++) {
+		for (int j1 = 1; j1 < keyroots2.size() + 1; j1++) {
+			int i = keyroots1[i1 - 1];
+			int j = keyroots2[j1 - 1];
+			vector<int> line = treedist(indexes1, indexes2, names1, names2, i, j);
+			TD.push_back(line);
+		}
+	}
+
+	return TD;
+}
+vector<int> treedist(vector<int> indexes1, vector<int> indexes2, vector<string> names1, vector<string> names2, int i, int j) {
+	vector<vector<int>> forestdist;
+
+	int Delete = 1;
+	int Insert = 1;
+	int Relabel = 1;
+
+	forestdist[0][0] = 0;
+	for (int i1 = indexes1[i - 1]; i1 <= i; i1++) {
+		forestdist[i1][0] = forestdist[i1 - 1][0] + Delete;
+	}
+	for (int j1 = indexes2[j - 1]; j1 <= j; j1++) {
+		forestdist[0][j1] = forestdist[0][j1 - 1] + Insert;
+	}
+	for (int i1 = indexes1[i - 1]; i1 <= i; i1++) {
+		for (int j1 = indexes2[j - 1]; j1 <= j; j1++) {
+			int i_temp = (indexes1[i - 1] > i1 - 1) ? 0 : i1 - 1;
+			int j_temp = (indexes2[j - 1] > j1 - 1) ? 0 : j1 - 1;
+			if ((indexes1[i1 - 1] == indexes1[i - 1]) && (indexes2[j1 - 1] == indexes2[j - 1])) {
+
+				int Cost = (names1[i1 - 1] == names2[j1 - 1]) ? 0 : Relabel;
+				forestdist[i1][j1] = std::min(
+					std::min(forestdist[i_temp][j1] + Delete, forestdist[i1][j_temp] + Insert),
+					forestdist[i_temp][j_temp] + Cost);
+				TD[i1][j1] = forestdist[i1][j1];
+			}
+			else {
+				int i1_temp = l1.get(i1 - 1) - 1;
+				int j1_temp = l2.get(j1 - 1) - 1;
+
+				int i_temp2 = (l1.get(i - 1) > i1_temp) ? 0 : i1_temp;
+				int j_temp2 = (l2.get(j - 1) > j1_temp) ? 0 : j1_temp;
+
+				forestdist[i1][j1] = min(
+					min(forestdist[i_temp][j1] + Delete, forestdist[i1][j_temp] + Insert),
+					forestdist[i_temp2][j_temp2] + TD[i1][j1]);
+			}
+		}
+	}
+	return forestdist[i][j];
+}
+
 
 vector<vector<string>> split_rule(string str) {
 
@@ -634,81 +753,14 @@ vector<int> keyroots(Node* root) {
 	return keyroots;
 }
 
-int** treedist(Node* l1, Node* l2, int i, int j, Node* root1, Node* root2) {
-
-	int** forestdist = new int* [i + 1];
-	for (int i = 0; i < i + 1; i++)
-		forestdist[i] = new int[j + 1];
-
-	int Delete = 1;
-	int Insert = 1;
-	int Relabel = 1;
-
-	forestdist[0][0] = 0;
-	for (int i1 = l1->children.size(); i1 <= i; i1++) {
-		forestdist[i1][0] = forestdist[i1 - 1][0] + Delete;
-	}
-	for (int j1 = l2->children.size(); j1 <= j; j1++) {
-		forestdist[0][j1] = forestdist[0][j1 - 1] + Insert;
-	}
-	for (int i1 = l1->children.size(); i1 <= i; i1++) {
-		for (int j1 = l2->children.size(); j1 <= j; j1++) {
-			int i_temp = (l1->children.size() > i1 - 1) ? 0 : i1 - 1;
-			int j_temp = (l2->children.size() > j1 - 1) ? 0 : j1 - 1;
-			if ((l1->children.size() == l1->children.size()) && (l2->children.size() == l2->children.size())) {
-
-				int Cost = (root1->name == root2->name) ? 0 : Relabel;
-				forestdist[i1][j1] = min(
-					min(forestdist[i_temp][j1] + Delete, forestdist[i1][j_temp] + Insert),
-					forestdist[i_temp][j_temp] + Cost);
-			}
-			else {
-				int i1_temp = l1->children.size() - 1;
-				int j1_temp = l2->children.size() - 1;
-
-				int i_temp2 = (l1->children.size() > i1_temp) ? 0 : i1_temp;
-				int j_temp2 = (l2->children.size() > j1_temp) ? 0 : j1_temp;
-
-				forestdist[i1][j1] = min(
-					min(forestdist[i_temp][j1] + Delete, forestdist[i1][j_temp] + Insert),
-					forestdist[i_temp2][j_temp2]);
-			}
-		}
-	}
-	return forestdist;
-}
-
-
-int** ZhangShasha(Node* root1, Node* root2) {
-	Node* l1 = root1->children.front();
-	vector<int> keyroots1 = keyroots(root1);
-	Node* l2 = root2->children.front();
-	vector<int> keyroots2 = keyroots(root2);
-
-	// space complexity of the algorithm
-	int** TD = new int* [l1->children.size() + 1];
-	for ( int i = 0; i < l1->children.size() + 1; i++)
-		TD[i] = new int[l2->children.size() + 1];
-
-	// solve subproblems
-	for (int i1 = 1; i1 < keyroots1.size() + 1; i1++) {
-		for (int j1 = 1; j1 < keyroots2.size() + 1; j1++) {
-			int i = keyroots1[i1 - 1];
-			int j = keyroots2[j1 - 1];
-			TD = treedist(l1, l2, i, j, root1, root2);
-		}
-	}
-
-	return TD;
-}
-
 
 
 vector<vector<string>> print_tree(Node* initial) {
 	
 		vector <vector<string>> output;
 		output.push_back(vector<string>());
-		output.back().push_back(initial->name + ";=" + to_string(initial->label) + "=" + to_string(initial->program_point[0]) + ";" + to_string(initial->program_point[1]));
+		/*output.back().push_back(initial->name + ";=" + to_string(initial->label) + "=" + to_string(initial->program_point[0]) + ";" + to_string(initial->program_point[1]));*/
+		output.back().push_back(initial->name);
 		output.push_back(vector<string>());
 		struct Node* current = new Node;
 		current = initial->children[0];
@@ -720,7 +772,8 @@ vector<vector<string>> print_tree(Node* initial) {
 			line++;
 			int length = 0;
 			int length_cur = 0;
-			output[line].push_back(current->name+";="+ to_string(current->label)+"=" +to_string(current->program_point[0])+";"+ to_string(current->program_point[1]));
+			/*output[line].push_back(current->name+";="+ to_string(current->label)+"=" +to_string(current->program_point[0])+";"+ to_string(current->program_point[1]));*/
+			output[line].push_back(current->name);
 			output[line].push_back(" ");
 			for (auto& elem : output[line]) {
 				length_cur += elem.length();
